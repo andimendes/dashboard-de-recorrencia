@@ -1,97 +1,142 @@
-# Next.js Template - Lasy AI
+# Mister Ottani Vendas PRO
 
-Este é um template [Next.js](https://nextjs.org) otimizado para deploys sem problemas, bootstrapped com [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Sistema completo de CRM e acompanhamento de vendas para a indústria de massas alimentícias.
 
-## 🚀 Melhorias para Deploy na Vercel
+## 🚀 Deploy na Vercel
 
-Este template inclui otimizações específicas para evitar erros comuns de deploy:
+### Pré-requisitos
+- Conta no GitHub
+- Conta na Vercel
+- Node.js 18+ instalado
 
-### ✅ **Compatibilidade de Dependências**
+### Passo a Passo para Deploy
 
-- **Next.js 15.1.8** + **React 19** + todas as dependências atualizadas
-- **react-day-picker v9** compatível com React 19
-- **Configuração `.npmrc`** para resolver conflitos automaticamente
-
-### ✅ **Configurações de Build Otimizadas**
-
-- **TypeScript configurado** para excluir Supabase functions
-- **Webpack configurado** para ignorar conflitos Deno/Node.js
-- **`.vercelignore`** para otimizar o processo de build
-
-### ✅ **Componentes Atualizados**
-
-- **Calendar component** compatível com react-day-picker v9
-- **UI components** do Shadcn/UI nas versões mais recentes
-
----
-
-## 🛠️ Começando
-
-Execute o servidor de desenvolvimento:
-
+#### 1. Preparar o Repositório GitHub
 ```bash
+# Clone o projeto
+git clone <seu-repositorio>
+cd mister-ottani-vendas-pro
+
+# Instale as dependências
+npm install
+
+# Teste localmente
 npm run dev
-# ou
-yarn dev
-# ou
-pnpm dev
-# ou
-bun dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
+#### 2. Conectar GitHub com Vercel
 
-Você pode começar editando a página modificando `app/page.tsx`. A página atualiza automaticamente conforme você edita o arquivo.
+1. **Acesse [vercel.com](https://vercel.com)**
+2. **Faça login com sua conta GitHub**
+3. **Clique em "New Project"**
+4. **Selecione seu repositório GitHub**
+5. **Configure as variáveis de ambiente**
 
----
+#### 3. Configurar Variáveis de Ambiente na Vercel
 
-## 📚 Stack Tecnológica
+No painel da Vercel, vá em **Settings > Environment Variables** e adicione:
 
-- **Framework**: Next.js 15.1.8 com App Router
-- **React**: 19.0.0 com suporte total
-- **Styling**: Tailwind CSS + Shadcn/UI
-- **Icons**: Lucide React
-- **Forms**: React Hook Form + Zod
-- **UI Components**: Radix UI primitives
-
----
-
-## 🔧 Deploy na Vercel
-
-### **Variáveis de Ambiente**
-
-Se você estiver usando Supabase, configure estas variáveis na Vercel:
-
-```bash
+```env
 NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima_supabase
+SUPABASE_SERVICE_ROLE_KEY=sua_chave_service_role
+NEXTAUTH_SECRET=seu_secret_nextauth
 ```
 
-### **Deploy Automático**
+#### 4. Deploy Automático
 
-1. Conecte seu repositório GitHub à Vercel
-2. A Vercel detectará automaticamente Next.js
-3. O build será executado sem erros graças às otimizações
+- Após conectar o repositório, a Vercel fará o deploy automaticamente
+- Cada push na branch `main` disparará um novo deploy
+- Acesse sua aplicação na URL fornecida pela Vercel
 
----
+### 🔧 Solução de Problemas
 
-## 📖 Saiba Mais
+#### Erro: "GitHub-Vercel configuration error"
 
-Para aprender mais sobre Next.js, confira estes recursos:
+1. **Desconecte e reconecte as contas:**
+   - Vá em GitHub Settings > Applications
+   - Revogue o acesso da Vercel
+   - Reconecte via Vercel Dashboard
 
-- [Documentação Next.js](https://nextjs.org/docs) - aprenda sobre recursos e API do Next.js
-- [Learn Next.js](https://nextjs.org/learn) - tutorial interativo do Next.js
+2. **Verifique permissões do repositório:**
+   - Certifique-se que a Vercel tem acesso ao repositório
+   - O repositório deve ser público ou a Vercel deve ter permissão
 
-Você pode conferir [o repositório GitHub do Next.js](https://github.com/vercel/next.js) - seu feedback e contribuições são bem-vindos!
+3. **Reconfigure o projeto:**
+   - Delete o projeto na Vercel
+   - Crie um novo projeto
+   - Reimporte do GitHub
 
----
+#### Erro de Build
 
-## 🎯 Deploy Otimizado
+1. **Verifique as dependências:**
+   ```bash
+   npm install
+   npm run build
+   ```
 
-A maneira mais fácil de deployar seu app Next.js é usar a [Plataforma Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) dos criadores do Next.js.
+2. **Limpe o cache:**
+   ```bash
+   npm run clean
+   rm -rf .next
+   npm install
+   ```
 
-Confira nossa [documentação de deployment do Next.js](https://nextjs.org/docs/app/building-your-application/deploying) para mais detalhes.
+3. **Verifique variáveis de ambiente:**
+   - Todas as variáveis necessárias estão configuradas?
+   - Os valores estão corretos?
 
----
+### 📁 Estrutura do Projeto
 
-_Template otimizado para uso com Lasy AI - builds consistentes e deploys sem problemas!_
+```
+src/
+├── app/                 # App Router do Next.js
+│   ├── dashboard/       # Páginas do dashboard
+│   └── page.tsx         # Página inicial
+├── components/          # Componentes React
+│   ├── ui/             # Componentes base (Shadcn/UI)
+│   ├── dashboard/      # Componentes do dashboard
+│   ├── clients/        # Componentes de clientes
+│   ├── recurrence/     # Componentes de recorrência
+│   ├── sales-funnel/   # Componentes do funil
+│   ├── prospects/      # Componentes de prospecção
+│   ├── reports/        # Componentes de relatórios
+│   └── tasks/          # Componentes de tarefas
+└── lib/                # Utilitários e configurações
+```
+
+### 🛠️ Tecnologias Utilizadas
+
+- **Framework:** Next.js 14 (App Router)
+- **UI:** Shadcn/UI + Tailwind CSS
+- **Gráficos:** Recharts
+- **Ícones:** Lucide React
+- **Formulários:** React Hook Form
+- **Validação:** Zod
+- **Deploy:** Vercel
+
+### 📊 Funcionalidades
+
+- ✅ Dashboard com KPIs em tempo real
+- ✅ Gestão completa de clientes (360°)
+- ✅ Acompanhamento de recorrência proativo
+- ✅ Funil de vendas visual
+- ✅ Sistema de prospecção
+- ✅ Relatórios avançados
+- ✅ Gestão de tarefas e agenda
+- ✅ Sistema de scoring automático
+- ✅ Integração preparada para Sankhya ERP
+
+### 🔗 Links Úteis
+
+- [Documentação do Next.js](https://nextjs.org/docs)
+- [Documentação da Vercel](https://vercel.com/docs)
+- [Shadcn/UI](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+### 📞 Suporte
+
+Para dúvidas ou problemas:
+1. Verifique a documentação
+2. Consulte os logs de build na Vercel
+3. Entre em contato com o suporte técnico
