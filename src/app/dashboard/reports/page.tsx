@@ -11,9 +11,10 @@ import { ClientsReport } from "@/components/reports/clients-report";
 import { PerformanceReport } from "@/components/reports/performance-report";
 import { RecurrenceReport } from "@/components/reports/recurrence-report";
 import { Download, FileText, BarChart3, TrendingUp, Users, Target } from "lucide-react";
+import { DateRange } from "react-day-picker";
 
 export default function ReportsPage() {
-  const [dateRange, setDateRange] = useState({
+  const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(2024, 0, 1),
     to: new Date()
   });
@@ -35,6 +36,12 @@ export default function ReportsPage() {
       vendedor: selectedVendedor
     });
     // Aqui seria implementada a lógica de exportação
+  };
+
+  const handleDateChange = (date: DateRange | undefined) => {
+    if (date) {
+      setDateRange(date);
+    }
   };
 
   return (
@@ -71,7 +78,7 @@ export default function ReportsPage() {
             <div className="flex-1 min-w-[200px]">
               <DatePickerWithRange
                 date={dateRange}
-                onDateChange={setDateRange}
+                onDateChange={handleDateChange}
               />
             </div>
             <Select value={selectedVendedor} onValueChange={setSelectedVendedor}>

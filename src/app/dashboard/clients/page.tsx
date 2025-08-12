@@ -125,7 +125,7 @@ export default function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{scoreAClients}</div>
             <p className="text-xs text-muted-foreground">
-              {((scoreAClients / totalClients) * 100).toFixed(1)}% do total
+              {((scoreAClients / totalClientes) * 100).toFixed(1)}% do total
             </p>
           </CardContent>
         </Card>
@@ -138,7 +138,7 @@ export default function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{scoreBClients}</div>
             <p className="text-xs text-muted-foreground">
-              {((scoreBClients / totalClients) * 100).toFixed(1)}% do total
+              {((scoreBClients / totalClientes) * 100).toFixed(1)}% do total
             </p>
           </CardContent>
         </Card>
@@ -151,7 +151,7 @@ export default function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{scoreCClients}</div>
             <p className="text-xs text-muted-foreground">
-              {((scoreCClients / totalClients) * 100).toFixed(1)}% do total
+              {((scoreCClients / totalClientes) * 100).toFixed(1)}% do total
             </p>
           </CardContent>
         </Card>

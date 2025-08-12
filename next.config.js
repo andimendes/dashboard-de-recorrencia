@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configuração otimizada para Vercel
+  // Configuração essencial para Vercel
   output: 'standalone',
+  
+  // Configurações básicas
+  reactStrictMode: true,
+  swcMinify: true,
+  poweredByHeader: false,
   
   // Configurações de imagem
   images: {
@@ -20,12 +25,12 @@ const nextConfig = {
     unoptimized: false,
   },
 
-  // Configurações experimentais estáveis
+  // Configurações experimentais mínimas
   experimental: {
     serverComponentsExternalPackages: ['@supabase/supabase-js'],
   },
 
-  // Headers de segurança
+  // Headers básicos
   async headers() {
     return [
       {
@@ -39,36 +44,33 @@ const nextConfig = {
           },
           {
             key: 'Access-Control-Allow-Headers',
-            value:
-              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization',
+            value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization',
           },
         ],
       },
     ];
   },
 
-  // ESLint configuração
+  // Redirects
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard',
+        permanent: false,
+      },
+    ];
+  },
+
+  // ESLint e TypeScript
   eslint: {
     ignoreDuringBuilds: false,
   },
-
-  // TypeScript configuração
   typescript: {
     ignoreBuildErrors: false,
   },
 
-  // Configurações de compilação
-  swcMinify: true,
-  
-  // Configurações de ambiente
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  },
-
-  // Configurações de webpack
+  // Configurações de webpack simplificadas
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -79,8 +81,13 @@ const nextConfig = {
         crypto: false,
       };
     }
-
     return config;
+  },
+
+  // Variáveis de ambiente
+  env: {
+    CUSTOM_KEY: process.env.CUSTOM_KEY || '',
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
 };
 
