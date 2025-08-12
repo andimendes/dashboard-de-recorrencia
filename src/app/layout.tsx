@@ -6,8 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mister Ottani Vendas PRO",
-  description: "Plataforma Inteligente de Acompanhamento de Vendas e Gestão de Clientes",
+  title: "Mister Ottani - Sistema de Vendas",
+  description: "Sistema completo de gestão de vendas e clientes",
 };
 
 export default function RootLayout({

@@ -5,20 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Calendar, Phone, Mail, MapPin } from "lucide-react";
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  type: "call" | "email" | "visit" | "meeting";
-  priority: "urgent" | "high" | "medium" | "low";
-  status: "pending" | "completed" | "cancelled";
-  dueDate: string;
-  dueTime: string;
-  client: string;
-  vendedor: string;
-  createdAt: string;
-}
+import { type Task } from "@/lib/supabase";
 
 interface TaskCalendarProps {
   tasks: Task[];
@@ -73,7 +60,7 @@ export function TaskCalendar({ tasks }: TaskCalendarProps) {
   const getTasksForDate = (date: Date | null) => {
     if (!date) return [];
     const dateString = date.toISOString().split('T')[0];
-    return tasks.filter(task => task.dueDate === dateString);
+    return tasks.filter(task => task.due_date === dateString);
   };
 
   const navigateMonth = (direction: 'prev' | 'next') => {
@@ -138,7 +125,7 @@ export function TaskCalendar({ tasks }: TaskCalendarProps) {
               <div
                 key={index}
                 className={`min-h-[100px] p-1 border rounded-lg ${
-                  day ? 'bg-backgroun' : 'bg-muted/30'
+                  day ? 'bg-background' : 'bg-muted/30'
                 } ${isToday ? 'ring-2 ring-primary' : ''}`}
               >
                 {day && (
