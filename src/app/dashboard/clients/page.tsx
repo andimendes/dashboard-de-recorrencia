@@ -12,12 +12,14 @@ import { Search, Filter, Plus, Eye, Phone, Mail, TrendingUp, TrendingDown, Users
 import { ClientDetailsModal } from "@/components/clients/client-details-modal";
 import { AddClientModal } from "@/components/clients/add-client-modal";
 
+type ClientScore = "A" | "B" | "C";
+
 const clients = [
   {
     id: "1",
     name: "Supermercado Central",
     cnpj: "12.345.678/0001-90",
-    score: "A" as const,
+    score: "A" as ClientScore,
     faturamento: 45000,
     ultimaCompra: "2024-01-15",
     frequencia: "Semanal",
@@ -32,7 +34,7 @@ const clients = [
     id: "2",
     name: "Restaurante Bella Vista",
     cnpj: "98.765.432/0001-10",
-    score: "A" as const,
+    score: "A" as ClientScore,
     faturamento: 38000,
     ultimaCompra: "2024-01-14",
     frequencia: "Quinzenal",
@@ -47,7 +49,7 @@ const clients = [
     id: "3",
     name: "Lanchonete do Parque",
     cnpj: "11.222.333/0001-44",
-    score: "B" as const,
+    score: "B" as ClientScore,
     faturamento: 22000,
     ultimaCompra: "2024-01-12",
     frequencia: "Mensal",
@@ -56,6 +58,21 @@ const clients = [
     email: "lanchonete@parque.com",
     endereco: "Rua do Parque, 789 - Vila Nova",
     pmp: 30,
+    produtos: ["Massa de Pastel"]
+  },
+  {
+    id: "4",
+    name: "Padaria do Centro",
+    cnpj: "22.333.444/0001-55",
+    score: "C" as ClientScore,
+    faturamento: 15000,
+    ultimaCompra: "2024-01-10",
+    frequencia: "Bimestral",
+    vendedor: "Ana Costa",
+    telefone: "(16) 99999-3456",
+    email: "padaria@centro.com",
+    endereco: "Rua Central, 321 - Centro",
+    pmp: 45,
     produtos: ["Massa de Pastel"]
   }
 ];
@@ -73,7 +90,7 @@ export default function ClientsPage() {
     return matchesSearch && matchesScore;
   });
 
-  const getScoreBadgeVariant = (score: "A" | "B" | "C") => {
+  const getScoreBadgeVariant = (score: ClientScore) => {
     switch (score) {
       case "A": return "default";
       case "B": return "secondary";
@@ -125,7 +142,7 @@ export default function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{scoreAClients}</div>
             <p className="text-xs text-muted-foreground">
-              {((scoreAClients / totalClientes) * 100).toFixed(1)}% do total
+              {((scoreAClients / totalClients) * 100).toFixed(1)}% do total
             </p>
           </CardContent>
         </Card>
@@ -138,7 +155,7 @@ export default function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{scoreBClients}</div>
             <p className="text-xs text-muted-foreground">
-              {((scoreBClients / totalClientes) * 100).toFixed(1)}% do total
+              {((scoreBClients / totalClients) * 100).toFixed(1)}% do total
             </p>
           </CardContent>
         </Card>
@@ -151,7 +168,7 @@ export default function ClientsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{scoreCClients}</div>
             <p className="text-xs text-muted-foreground">
-              {((scoreCClients / totalClientes) * 100).toFixed(1)}% do total
+              {((scoreCClients / totalClients) * 100).toFixed(1)}% do total
             </p>
           </CardContent>
         </Card>

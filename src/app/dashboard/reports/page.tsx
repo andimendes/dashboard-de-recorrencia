@@ -14,7 +14,7 @@ import { Download, FileText, BarChart3, TrendingUp, Users, Target } from "lucide
 import { DateRange } from "react-day-picker";
 
 export default function ReportsPage() {
-  const [dateRange, setDateRange] = useState<DateRange>({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(2024, 0, 1),
     to: new Date()
   });
@@ -36,12 +36,6 @@ export default function ReportsPage() {
       vendedor: selectedVendedor
     });
     // Aqui seria implementada a lógica de exportação
-  };
-
-  const handleDateChange = (date: DateRange | undefined) => {
-    if (date) {
-      setDateRange(date);
-    }
   };
 
   return (
@@ -78,7 +72,7 @@ export default function ReportsPage() {
             <div className="flex-1 min-w-[200px]">
               <DatePickerWithRange
                 date={dateRange}
-                onDateChange={handleDateChange}
+                onDateChange={setDateRange}
               />
             </div>
             <Select value={selectedVendedor} onValueChange={setSelectedVendedor}>

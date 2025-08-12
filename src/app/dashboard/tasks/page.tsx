@@ -222,7 +222,7 @@ export default function TasksPage() {
 
       <AddTaskModal
         open={showAddModal}
-        on Close={() => setShowAddModal(false)}
+        onClose={() => setShowAddModal(false)}
       />
     </div>
   );
