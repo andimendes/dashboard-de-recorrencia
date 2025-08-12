@@ -9,16 +9,16 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export interface Task {
   id: string
   title: string
-  description: string
+  description?: string
   type: 'call' | 'email' | 'visit' | 'meeting'
   priority: 'urgent' | 'high' | 'medium' | 'low'
   status: 'pending' | 'completed' | 'cancelled'
   due_date: string
-  due_time: string
-  client_name: string
+  due_time?: string
+  client_name?: string
   vendedor: string
-  created_at: string
-  updated_at: string
+  created_at?: string
+  updated_at?: string
 }
 
 export interface Client {
@@ -29,20 +29,22 @@ export interface Client {
   address?: string
   score: 'A' | 'B' | 'C'
   status: 'active' | 'inactive' | 'risk'
-  last_purchase: string
-  total_purchases: number
+  last_purchase?: string
+  total_purchases?: number
   vendedor: string
-  created_at: string
-  updated_at: string
+  purchase_frequency?: string
+  created_at?: string
+  updated_at?: string
 }
 
 export interface Sale {
   id: string
-  client_id: string
+  client_id?: string
+  client_name: string
   vendedor: string
   amount: number
-  products: string
+  products?: string
   sale_date: string
   status: 'pending' | 'completed' | 'cancelled'
-  created_at: string
+  created_at?: string
 }

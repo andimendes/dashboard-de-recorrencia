@@ -16,7 +16,7 @@ export function useClients() {
       const { data, error } = await supabase
         .from('clients')
         .select('*')
-        .order('name', { ascending: true });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setClients(data || []);
@@ -43,7 +43,7 @@ export function useClients() {
 
       if (error) throw error;
 
-      setClients(prev => [...prev, data]);
+      setClients(prev => [data, ...prev]);
       toast({
         title: "Sucesso",
         description: "Cliente criado com sucesso!"
@@ -89,6 +89,32 @@ export function useClients() {
     }
   };
 
+  // Deletar cliente
+  const deleteClient = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('clients')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setClients(prev => prev.filter(client => client.id !== id));
+      toast({
+        title: "Sucesso",
+        description: "Cliente excluído com sucesso!"
+      });
+    } catch (error) {
+      console.error('Erro ao deletar cliente:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível excluir o cliente",
+        variant: "destructive"
+      });
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchClients();
   }, []);
@@ -98,6 +124,7 @@ export function useClients() {
     loading,
     createClient,
     updateClient,
+    deleteClient,
     refetch: fetchClients
   };
 }
