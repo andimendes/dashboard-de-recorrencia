@@ -1,137 +1,177 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
-import { DateRange } from "react-day-picker";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 
-interface SalesReportProps {
-  dateRange: DateRange | undefined;
-  vendedor: string;
-}
+const salesData = [
+  { month: "Jan", vendas: 420000, meta: 450000, pedidos: 156 },
+  { month: "Fev", vendas: 380000, meta: 450000, pedidos: 142 },
+  { month: "Mar", vendas: 520000, meta: 450000, pedidos: 178 },
+  { month: "Abr", vendas: 470000, meta: 450000, pedidos: 165 },
+  { month: "Mai", vendas: 510000, meta: 450000, pedidos: 172 },
+  { month: "Jun", vendas: 490000, meta: 450000, pedidos: 168 },
+];
 
-export function SalesReport({ dateRange, vendedor }: SalesReportProps) {
-  // Dados simulados
-  const salesData = [
-    { month: "Jan", vendas: 45000, meta: 50000 },
-    { month: "Fev", vendas: 52000, meta: 50000 },
-    { month: "Mar", vendas: 48000, meta: 50000 },
-    { month: "Abr", vendas: 61000, meta: 55000 },
-    { month: "Mai", vendas: 55000, meta: 55000 },
-    { month: "Jun", vendas: 67000, meta: 60000 },
-  ];
+const productData = [
+  { name: "Massa de Pastel", value: 45, color: "#8884d8" },
+  { name: "Massa de Pizza", value: 30, color: "#82ca9d" },
+  { name: "Massa de Lasanha", value: 20, color: "#ffc658" },
+  { name: "Outros", value: 5, color: "#ff7300" },
+];
 
-  const productData = [
-    { produto: "Massa de Pastel", vendas: 15000, percentual: 25 },
-    { produto: "Massa de Lasanha", vendas: 12000, percentual: 20 },
-    { produto: "Massa de Pizza", vendas: 18000, percentual: 30 },
-    { produto: "Massa de Ravioli", vendas: 9000, percentual: 15 },
-    { produto: "Outros", vendas: 6000, percentual: 10 },
-  ];
+const vendedorData = [
+  { vendedor: "João Silva", vendas: 125000, meta: 120000, clientes: 45, conversao: 78 },
+  { vendedor: "Maria Santos", vendas: 98000, meta: 100000, clientes: 38, conversao: 82 },
+  { vendedor: "Carlos Lima", vendas: 87000, meta: 90000, clientes: 32, conversao: 75 },
+  { vendedor: "Ana Costa", vendas: 76000, meta: 80000, clientes: 28, conversao: 71 },
+];
 
+export function SalesReport() {
   return (
-    <div className="space-y-4">
-      {/* KPIs de Vendas */}
+    <div className="space-y-6">
+      {/* Resumo Executivo */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Vendas Totais</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ 328.000</div>
-            <p className="text-xs text-muted-foreground">
-              +12% em relação ao período anterior
-            </p>
+            <div className="text-2xl font-bold">R$ 2.790.000</div>
+            <p className="text-xs text-muted-foreground">+12.5% vs período anterior</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Meta Atingida</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">98.5%</div>
-            <p className="text-xs text-muted-foreground">
-              R$ 5.000 para atingir 100%
-            </p>
+            <div className="text-2xl font-bold">103.7%</div>
+            <p className="text-xs text-muted-foreground">Acima da meta</p>
           </CardContent>
         </Card>
-
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ticket Médio</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">R$ 2.850</div>
-            <p className="text-xs text-muted-foreground">
-              +5% em relação ao período anterior
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Pedidos</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">115</div>
-            <p className="text-xs text-muted-foreground">
-              +8 pedidos este mês
-            </p>
+            <div className="text-2xl font-bold">981</div>
+            <p className="text-xs text-muted-foreground">+8.2% vs período anterior</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Ticket Médio</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">R$ 2.845</div>
+            <p className="text-xs text-muted-foreground">+3.8% vs período anterior</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Gráfico de Vendas vs Meta */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Vendas vs Meta</CardTitle>
-          <CardDescription>
-            Comparação entre vendas realizadas e metas estabelecidas
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={salesData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip formatter={(value) => [`R$ ${value.toLocaleString('pt-BR')}`, '']} />
-              <Bar dataKey="vendas" fill="#3b82f6" name="Vendas" />
-              <Bar dataKey="meta" fill="#e5e7eb" name="Meta" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+      {/* Gráficos */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Evolução de Vendas</CardTitle>
+            <CardDescription>Vendas vs Meta por mês</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={salesData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`} />
+                <Tooltip formatter={(value: number) => [`R$ ${value.toLocaleString('pt-BR')}`, '']} />
+                <Bar dataKey="vendas" fill="#8884d8" name="Vendas" />
+                <Bar dataKey="meta" fill="#82ca9d" name="Meta" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-      {/* Vendas por Produto */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Mix de Produtos</CardTitle>
+            <CardDescription>Participação por categoria</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={productData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {productData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Ranking de Vendedores */}
       <Card>
         <CardHeader>
-          <CardTitle>Vendas por Produto</CardTitle>
-          <CardDescription>
-            Distribuição das vendas por categoria de produto
-          </CardDescription>
+          <CardTitle>Performance por Vendedor</CardTitle>
+          <CardDescription>Ranking de vendas no período</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {productData.map((item, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium">{item.produto}</span>
-                    <span className="text-sm text-muted-foreground">
-                      R$ {item.vendas.toLocaleString('pt-BR')} ({item.percentual}%)
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{ width: `${item.percentual}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Vendedor</TableHead>
+                <TableHead>Vendas</TableHead>
+                <TableHead>Meta</TableHead>
+                <TableHead>% Meta</TableHead>
+                <TableHead>Clientes</TableHead>
+                <TableHead>Conversão</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {vendedorData.map((vendedor, index) => {
+                const percentMeta = (vendedor.vendas / vendedor.meta) * 100;
+                return (
+                  <TableRow key={vendedor.vendedor}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium">
+                          {index + 1}
+                        </div>
+                        {vendedor.vendedor}
+                      </div>
+                    </TableCell>
+                    <TableCell>R$ {vendedor.vendas.toLocaleString('pt-BR')}</TableCell>
+                    <TableCell>R$ {vendedor.meta.toLocaleString('pt-BR')}</TableCell>
+                    <TableCell>
+                      <span className={percentMeta >= 100 ? 'text-green-600' : 'text-red-600'}>
+                        {percentMeta.toFixed(1)}%
+                      </span>
+                    </TableCell>
+                    <TableCell>{vendedor.clientes}</TableCell>
+                    <TableCell>{vendedor.conversao}%</TableCell>
+                    <TableCell>
+                      <Badge variant={percentMeta >= 100 ? "default" : "secondary"}>
+                        {percentMeta >= 100 ? "Meta Atingida" : "Abaixo da Meta"}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

@@ -8,6 +8,7 @@ import { SalesChart } from "@/components/dashboard/sales-chart";
 import { ClientsTable } from "@/components/dashboard/clients-table";
 import { RecurrenceOverview } from "@/components/dashboard/recurrence-overview";
 import { SalesFunnel } from "@/components/dashboard/sales-funnel";
+import { Notifications } from "@/components/dashboard/notifications";
 
 export default function DashboardPage() {
   return (
@@ -49,6 +50,16 @@ export default function DashboardPage() {
                 <ClientsTable />
               </CardContent>
             </Card>
+          </div>
+
+          {/* Seção de Notificações */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <RecurrenceOverview />
+            </div>
+            <div>
+              <Notifications />
+            </div>
           </div>
         </TabsContent>
 
