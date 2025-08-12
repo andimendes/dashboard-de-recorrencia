@@ -1,44 +1,30 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Pie, PieChart, Cell } from "recharts";
-import { Users, TrendingUp, DollarSign, Clock } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { DateRange } from "react-day-picker";
 
 interface ClientsReportProps {
-  dateRange: any;
+  dateRange: DateRange | undefined;
   vendedor: string;
 }
 
-const clientsEvolution = [
-  { month: "Jan", novos: 8, perdidos: 2, ativos: 142 },
-  { month: "Fev", novos: 6, perdidos: 3, ativos: 145 },
-  { month: "Mar", novos: 12, perdidos: 1, ativos: 156 },
-  { month: "Abr", novos: 9, perdidos: 4, ativos: 161 },
-  { month: "Mai", novos: 7, perdidos: 2, ativos: 166 },
-  { month: "Jun", novos: 10, perdidos: 3, ativos: 173 },
-];
-
-const scoreDistribution = [
-  { name: "Score A", value: 35, color: "#22c55e" },
-  { name: "Score B", value: 45, color: "#eab308" },
-  { name: "Score C", value: 20, color: "#ef4444" },
-];
-
-const topClients = [
-  { name: "Supermercado Central", faturamento: 45000, score: "A", frequencia: "Semanal", pmp: 15 },
-  { name: "Restaurante Bella Vista", faturamento: 38000, score: "A", frequencia: "Quinzenal", pmp: 21 },
-  { name: "Lanchonete do Parque", faturamento: 22000, score: "B", frequencia: "Mensal", pmp: 30 },
-  { name: "Bar e Restaurante Oásis", faturamento: 18500, score: "B", frequencia: "Quinzenal", pmp: 25 },
-  { name: "Mercadinho São José", faturamento: 12000, score: "C", frequencia: "Mensal", pmp: 35 },
-];
-
 export function ClientsReport({ dateRange, vendedor }: ClientsReportProps) {
-  const totalClientes = 173;
-  const novosClientes = clientsEvolution.reduce((acc, item) => acc + item.novos, 0);
-  const clientesPerdidos = clientsEvolution.reduce((acc, item) => acc + item.perdidos, 0);
-  const retencaoRate = ((totalClientes - clientesPerdidos) / totalClientes * 100).toFixed(1);
+  // Dados simulados
+  const scoreData = [
+    { name: "Score A", value: 45, color: "#22c55e" },
+    { name: "Score B", value: 35, color: "#eab308" },
+    { name: "Score C", value: 20, color: "#ef4444" },
+  ];
+
+  const acquisitionData = [
+    { month: "Jan", novos: 5, perdidos: 2 },
+    { month: "Fev", novos: 8, perdidos: 1 },
+    { month: "Mar", novos: 6, perdidos: 3 },
+    { month: "Abr", novos: 12, perdidos: 2 },
+    { month: "Mai", novos: 9, perdidos: 4 },
+    { month: "Jun", novos: 15, perdidos: 1 },
+  ];
 
   return (
     <div className="space-y-4">
@@ -47,27 +33,23 @@ export function ClientsReport({ dateRange, vendedor }: ClientsReportProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total de Clientes</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalClientes}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              <span className="text-green-500">+18.2%</span>
-              <span className="ml-1">vs período anterior</span>
-            </div>
+            <div className="text-2xl font-bold">127</div>
+            <p className="text-xs text-muted-foreground">
+              +8 novos clientes este mês
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Novos Clientes</CardTitle>
-            <TrendingUp className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-medium">Clientes Ativos</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{novosClientes}</div>
+            <div className="text-2xl font-bold">98</div>
             <p className="text-xs text-muted-foreground">
-              No período selecionado
+              77% do total de clientes
             </p>
           </CardContent>
         </Card>
@@ -75,72 +57,50 @@ export function ClientsReport({ dateRange, vendedor }: ClientsReportProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Taxa de Retenção</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{retencaoRate}%</div>
+            <div className="text-2xl font-bold">94%</div>
             <p className="text-xs text-muted-foreground">
-              Clientes mantidos
+              +2% em relação ao mês anterior
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Faturamento Médio</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Valor Médio</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ 27.890</div>
+            <div className="text-2xl font-bold">R$ 2.580</div>
             <p className="text-xs text-muted-foreground">
-              Por cliente no período
+              Por cliente por mês
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Gráficos */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Evolução da Base de Clientes</CardTitle>
-            <CardDescription>Novos clientes, perdidos e base ativa</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={clientsEvolution}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="novos" fill="#22c55e" name="Novos" />
-                <Bar dataKey="perdidos" fill="#ef4444" name="Perdidos" />
-                <Bar dataKey="ativos" fill="#3b82f6" name="Ativos" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
+        {/* Distribuição por Score */}
         <Card>
           <CardHeader>
             <CardTitle>Distribuição por Score</CardTitle>
-            <CardDescription>Classificação dos clientes por potencial</CardDescription>
+            <CardDescription>
+              Classificação dos clientes por score de qualidade
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={scoreDistribution}
+                  data={scoreData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
+                  label={({ name, value }) => `${name}: ${value}%`}
                 >
-                  {scoreDistribution.map((entry, index) => (
+                  {scoreData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -149,46 +109,29 @@ export function ClientsReport({ dateRange, vendedor }: ClientsReportProps) {
             </ResponsiveContainer>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Top Clientes */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Top Clientes por Faturamento</CardTitle>
-          <CardDescription>Maiores clientes do período</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Cliente</TableHead>
-                <TableHead>Faturamento</TableHead>
-                <TableHead>Score</TableHead>
-                <TableHead>Frequência</TableHead>
-                <TableHead>PMP</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {topClients.map((client, index) => (
-                <TableRow key={client.name}>
-                  <TableCell className="font-medium">{client.name}</TableCell>
-                  <TableCell>R$ {client.faturamento.toLocaleString('pt-BR')}</TableCell>
-                  <TableCell>
-                    <Badge variant={
-                      client.score === "A" ? "default" : 
-                      client.score === "B" ? "secondary" : "outline"
-                    }>
-                      {client.score}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{client.frequencia}</TableCell>
-                  <TableCell>{client.pmp} dias</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+        {/* Aquisição de Clientes */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Aquisição de Clientes</CardTitle>
+            <CardDescription>
+              Novos clientes vs clientes perdidos por mês
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={acquisitionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="novos" fill="#22c55e" name="Novos Clientes" />
+                <Bar dataKey="perdidos" fill="#ef4444" name="Clientes Perdidos" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

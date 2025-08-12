@@ -1,192 +1,137 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Pie, PieChart, Cell } from "recharts";
-import { TrendingUp, TrendingDown, DollarSign, Package, Users, Target } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
+import { DateRange } from "react-day-picker";
 
 interface SalesReportProps {
-  dateRange: any;
+  dateRange: DateRange | undefined;
   vendedor: string;
 }
 
-const salesData = [
-  { month: "Jan", vendas: 420000, meta: 450000, pedidos: 85 },
-  { month: "Fev", vendas: 380000, meta: 450000, pedidos: 76 },
-  { month: "Mar", vendas: 520000, meta: 450000, pedidos: 104 },
-  { month: "Abr", vendas: 470000, meta: 450000, pedidos: 94 },
-  { month: "Mai", vendas: 510000, meta: 450000, pedidos: 102 },
-  { month: "Jun", vendas: 490000, meta: 450000, pedidos: 98 },
-];
-
-const productData = [
-  { name: "Massa de Pastel", value: 35, color: "#8884d8" },
-  { name: "Massa de Pizza", value: 30, color: "#82ca9d" },
-  { name: "Massa de Lasanha", value: 25, color: "#ffc658" },
-  { name: "Massa de Empada", value: 10, color: "#ff7300" },
-];
-
-const vendedorData = [
-  { name: "João Silva", vendas: 180000, meta: 150000, atingimento: 120 },
-  { name: "Maria Santos", vendas: 165000, meta: 150000, atingimento: 110 },
-  { name: "Carlos Lima", vendas: 145000, meta: 150000, atingimento: 97 },
-  { name: "Ana Costa", vendas: 200000, meta: 180000, atingimento: 111 },
-];
-
 export function SalesReport({ dateRange, vendedor }: SalesReportProps) {
-  const totalVendas = salesData.reduce((acc, item) => acc + item.vendas, 0);
-  const totalMeta = salesData.reduce((acc, item) => acc + item.meta, 0);
-  const atingimentoMeta = ((totalVendas / totalMeta) * 100).toFixed(1);
-  const totalPedidos = salesData.reduce((acc, item) => acc + item.pedidos, 0);
-  const ticketMedio = totalVendas / totalPedidos;
+  // Dados simulados
+  const salesData = [
+    { month: "Jan", vendas: 45000, meta: 50000 },
+    { month: "Fev", vendas: 52000, meta: 50000 },
+    { month: "Mar", vendas: 48000, meta: 50000 },
+    { month: "Abr", vendas: 61000, meta: 55000 },
+    { month: "Mai", vendas: 55000, meta: 55000 },
+    { month: "Jun", vendas: 67000, meta: 60000 },
+  ];
+
+  const productData = [
+    { produto: "Massa de Pastel", vendas: 15000, percentual: 25 },
+    { produto: "Massa de Lasanha", vendas: 12000, percentual: 20 },
+    { produto: "Massa de Pizza", vendas: 18000, percentual: 30 },
+    { produto: "Massa de Ravioli", vendas: 9000, percentual: 15 },
+    { produto: "Outros", vendas: 6000, percentual: 10 },
+  ];
 
   return (
     <div className="space-y-4">
-      {/* KPIs Principais */}
+      {/* KPIs de Vendas */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Vendas Totais</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {totalVendas.toLocaleString('pt-BR')}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              <span className="text-green-500">+12.5%</span>
-              <span className="ml-1">vs período anterior</span>
-            </div>
+            <div className="text-2xl font-bold">R$ 328.000</div>
+            <p className="text-xs text-muted-foreground">
+              +12% em relação ao período anterior
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Atingimento da Meta</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Meta Atingida</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{atingimentoMeta}%</div>
-            <Progress value={parseFloat(atingimentoMeta)} className="mt-2" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Pedidos</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalPedidos}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              <span className="text-green-500">+8.2%</span>
-              <span className="ml-1">vs período anterior</span>
-            </div>
+            <div className="text-2xl font-bold">98.5%</div>
+            <p className="text-xs text-muted-foreground">
+              R$ 5.000 para atingir 100%
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ticket Médio</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {ticketMedio.toLocaleString('pt-BR')}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              <span className="text-green-500">+3.8%</span>
-              <span className="ml-1">vs período anterior</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Gráficos */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Evolução de Vendas vs Meta</CardTitle>
-            <CardDescription>Comparativo mensal de vendas realizadas e metas</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={salesData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`} />
-                <Tooltip formatter={(value: number) => [`R$ ${value.toLocaleString('pt-BR')}`, '']} />
-                <Legend />
-                <Bar dataKey="vendas" fill="#8884d8" name="Vendas" />
-                <Bar dataKey="meta" fill="#82ca9d" name="Meta" />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="text-2xl font-bold">R$ 2.850</div>
+            <p className="text-xs text-muted-foreground">
+              +5% em relação ao período anterior
+            </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Mix de Produtos</CardTitle>
-            <CardDescription>Distribuição de vendas por produto</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pedidos</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={productData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {productData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="text-2xl font-bold">115</div>
+            <p className="text-xs text-muted-foreground">
+              +8 pedidos este mês
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Performance por Vendedor */}
+      {/* Gráfico de Vendas vs Meta */}
       <Card>
         <CardHeader>
-          <CardTitle>Performance por Vendedor</CardTitle>
-          <CardDescription>Ranking de vendedores por atingimento de meta</CardDescription>
+          <CardTitle>Vendas vs Meta</CardTitle>
+          <CardDescription>
+            Comparação entre vendas realizadas e metas estabelecidas
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Vendedor</TableHead>
-                <TableHead>Vendas</TableHead>
-                <TableHead>Meta</TableHead>
-                <TableHead>Atingimento</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {vendedorData.map((vendedor) => (
-                <TableRow key={vendedor.name}>
-                  <TableCell className="font-medium">{vendedor.name}</TableCell>
-                  <TableCell>R$ {vendedor.vendas.toLocaleString('pt-BR')}</TableCell>
-                  <TableCell>R$ {vendedor.meta.toLocaleString('pt-BR')}</TableCell>
-                  <TableCell>{vendedor.atingimento}%</TableCell>
-                  <TableCell>
-                    <Badge variant={vendedor.atingimento >= 100 ? "default" : "secondary"}>
-                      {vendedor.atingimento >= 100 ? "Meta Atingida" : "Abaixo da Meta"}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={salesData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => [`R$ ${value.toLocaleString('pt-BR')}`, '']} />
+              <Bar dataKey="vendas" fill="#3b82f6" name="Vendas" />
+              <Bar dataKey="meta" fill="#e5e7eb" name="Meta" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* Vendas por Produto */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Vendas por Produto</CardTitle>
+          <CardDescription>
+            Distribuição das vendas por categoria de produto
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {productData.map((item, index) => (
+              <div key={index} className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium">{item.produto}</span>
+                    <span className="text-sm text-muted-foreground">
+                      R$ {item.vendas.toLocaleString('pt-BR')} ({item.percentual}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full"
+                      style={{ width: `${item.percentual}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>

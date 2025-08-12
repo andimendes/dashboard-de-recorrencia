@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Phone, Mail, Calendar, DollarSign, User, Clock, MessageSquare } from "lucide-react";
+import { Phone, Mail, Calendar, DollarSign, User, Clock, MessageSquare, Plus } from "lucide-react";
 
 interface OpportunityModalProps {
   opportunity: any;
