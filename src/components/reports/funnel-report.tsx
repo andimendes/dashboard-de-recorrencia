@@ -25,7 +25,7 @@ const conversionTrend = [
 const vendedorFunnel = [
   { vendedor: "João Silva", prospects: 32, fechamentos: 6, taxa: 18.8, valorFechado: 120000 },
   { vendedor: "Maria Santos", prospects: 28, fechamentos: 5, taxa: 17.9, valorFechado: 95000 },
-  { vendedor: "Carlos Lima", vendedor: 25, fechamentos: 4, taxa: 16.0, valorFechado: 80000 },
+  { vendedor: "Carlos Lima", prospects: 25, fechamentos: 4, taxa: 16.0, valorFechado: 80000 },
   { vendedor: "Ana Costa", prospects: 22, fechamentos: 3, taxa: 13.6, valorFechado: 65000 },
 ];
 

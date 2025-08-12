@@ -157,7 +157,7 @@ export function RecurrenceReport() {
                 <TableHead>Vendedor</TableHead>
                 <TableHead>Total Clientes</TableHead>
                 <TableHead>Compraram</TableHead>
-                <TableHead>Taxa</TableHead>
+                <TableHead>Taxa</Table>
                 <TableHead>Atrasados</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
@@ -215,7 +215,7 @@ export function RecurrenceReport() {
                     </Badge>
                   </TableCell>
                   <TableCell>{client.cicloEsperado}</TableCell>
-                  <Table>{new Date(client.ultimaCompra).toLocaleDateString('pt-BR')}</TableCell>
+                  <TableCell>{new Date(client.ultimaCompra).toLocaleDateString('pt-BR')}</TableCell>
                   <TableCell>
                     <Badge variant={client.diasAtraso > 30 ? "destructive" : client.diasAtraso > 14 ? "secondary" : "outline"}>
                       {client.diasAtraso > 30 ? "Crítica" : client.diasAtraso > 14 ? "Alta" : "Média"}
