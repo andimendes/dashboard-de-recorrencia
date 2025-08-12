@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 const salesData = [
   { month: "Jan", vendas: 420000, meta: 450000, pedidos: 156 },
@@ -31,7 +31,6 @@ const vendedorData = [
 export function SalesReport() {
   return (
     <div className="space-y-6">
-      {/* Resumo Executivo */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
@@ -71,7 +70,6 @@ export function SalesReport() {
         </Card>
       </div>
 
-      {/* Gráficos */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -121,7 +119,6 @@ export function SalesReport() {
         </Card>
       </div>
 
-      {/* Ranking de Vendedores */}
       <Card>
         <CardHeader>
           <CardTitle>Performance por Vendedor</CardTitle>

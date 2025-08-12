@@ -44,7 +44,6 @@ export function ClientsReport() {
 
   return (
     <div className="space-y-6">
-      {/* Resumo da Base de Clientes */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
@@ -84,7 +83,6 @@ export function ClientsReport() {
         </Card>
       </div>
 
-      {/* Gráficos de Segmentação */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -133,7 +131,6 @@ export function ClientsReport() {
         </Card>
       </div>
 
-      {/* Top Clientes */}
       <Card>
         <CardHeader>
           <CardTitle>Top Clientes por Faturamento</CardTitle>
@@ -162,7 +159,7 @@ export function ClientsReport() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getScoreBadgeVariant(client.score)}>
+                    <Badge variant={getScoreBadgeVariant(client.score) as any}>
                       {client.score}
                     </Badge>
                   </TableCell>
@@ -180,7 +177,6 @@ export function ClientsReport() {
         </CardContent>
       </Card>
 
-      {/* Clientes em Risco */}
       <Card>
         <CardHeader>
           <CardTitle>Clientes em Risco</CardTitle>

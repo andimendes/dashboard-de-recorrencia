@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const recurrenceTrend = [
   { month: "Jul", taxa: 89.2, clientesAtivos: 234, clientesEsperados: 262 },
@@ -39,7 +39,6 @@ const clientsAtRisk = [
 export function RecurrenceReport() {
   return (
     <div className="space-y-6">
-      {/* Resumo de Recorrência */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
@@ -79,7 +78,6 @@ export function RecurrenceReport() {
         </Card>
       </div>
 
-      {/* Evolução da Taxa de Recorrência */}
       <Card>
         <CardHeader>
           <CardTitle>Evolução da Taxa de Recorrência</CardTitle>
@@ -104,7 +102,6 @@ export function RecurrenceReport() {
         </CardContent>
       </Card>
 
-      {/* Análise por Ciclo de Compra */}
       <Card>
         <CardHeader>
           <CardTitle>Análise por Ciclo de Compra</CardTitle>
@@ -144,7 +141,6 @@ export function RecurrenceReport() {
         </CardContent>
       </Card>
 
-      {/* Performance por Vendedor */}
       <Card>
         <CardHeader>
           <CardTitle>Performance por Vendedor</CardTitle>
@@ -157,7 +153,7 @@ export function RecurrenceReport() {
                 <TableHead>Vendedor</TableHead>
                 <TableHead>Total Clientes</TableHead>
                 <TableHead>Compraram</TableHead>
-                <TableHead>Taxa</Table>
+                <TableHead>Taxa</TableHead>
                 <TableHead>Atrasados</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
@@ -186,7 +182,6 @@ export function RecurrenceReport() {
         </CardContent>
       </Card>
 
-      {/* Clientes Críticos */}
       <Card>
         <CardHeader>
           <CardTitle>Clientes Críticos - Ação Urgente</CardTitle>
