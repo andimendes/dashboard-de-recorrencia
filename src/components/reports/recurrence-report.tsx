@@ -4,6 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { DateRange } from "react-day-picker";
+
+interface RecurrenceReportProps {
+  dateRange?: DateRange;
+  vendedor?: string;
+}
 
 const recurrenceTrend = [
   { month: "Jul", taxa: 89.2, clientesAtivos: 234, clientesEsperados: 262 },
@@ -36,7 +42,7 @@ const clientsAtRisk = [
   { name: "Mercado Bom Preço", vendedor: "João Silva", diasAtraso: 12, cicloEsperado: "Semanal", ultimaCompra: "2024-01-01" },
 ];
 
-export function RecurrenceReport() {
+export function RecurrenceReport({ dateRange, vendedor }: RecurrenceReportProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">

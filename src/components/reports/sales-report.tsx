@@ -4,6 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { DateRange } from "react-day-picker";
+
+interface SalesReportProps {
+  dateRange?: DateRange;
+  vendedor?: string;
+}
 
 const salesData = [
   { month: "Jan", vendas: 420000, meta: 450000, pedidos: 156 },
@@ -28,7 +34,12 @@ const vendedorData = [
   { vendedor: "Ana Costa", vendas: 76000, meta: 80000, clientes: 28, conversao: 71 },
 ];
 
-export function SalesReport() {
+export function SalesReport({ dateRange, vendedor }: SalesReportProps) {
+  // Filtrar dados baseado nos filtros (implementação futura)
+  const filteredVendedorData = vendedor && vendedor !== "all" 
+    ? vendedorData.filter(v => v.vendedor === vendedor)
+    : vendedorData;
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
@@ -138,7 +149,7 @@ export function SalesReport() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {vendedorData.map((vendedor, index) => {
+              {filteredVendedorData.map((vendedor, index) => {
                 const percentMeta = (vendedor.vendas / vendedor.meta) * 100;
                 return (
                   <TableRow key={vendedor.vendedor}>

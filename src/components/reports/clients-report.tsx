@@ -4,6 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { DateRange } from "react-day-picker";
+
+interface ClientsReportProps {
+  dateRange?: DateRange;
+  vendedor?: string;
+}
 
 const clientSegmentData = [
   { segment: "Score A", count: 45, faturamento: 1200000, color: "#8884d8" },
@@ -32,7 +38,7 @@ const clientsAtRisk = [
   { name: "Bar do João", diasSemComprar: 18, ultimaCompra: "2023-12-25", faturamentoAnual: 19000 },
 ];
 
-export function ClientsReport() {
+export function ClientsReport({ dateRange, vendedor }: ClientsReportProps) {
   const getScoreBadgeVariant = (score: string) => {
     switch (score) {
       case "A": return "default";
