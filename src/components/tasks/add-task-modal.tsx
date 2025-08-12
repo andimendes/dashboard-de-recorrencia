@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTasks } from "@/hooks/use-tasks";
+import { useClients } from "@/hooks/use-clients";
 
 interface AddTaskModalProps {
   open: boolean;
@@ -15,32 +17,58 @@ interface AddTaskModalProps {
 }
 
 export function AddTaskModal({ open, onClose }: AddTaskModalProps) {
+  const { createTask } = useTasks();
+  const { clients } = useClients();
+  const [loading, setLoading] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     type: "",
     priority: "",
-    dueDate: "",
-    dueTime: "",
-    client: "",
+    due_date: "",
+    due_time: "",
+    client_name: "",
     vendedor: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Nova tarefa:", formData);
-    // Aqui seria implementada a lógica de salvamento
-    onClose();
-    setFormData({
-      title: "",
-      description: "",
-      type: "",
-      priority: "",
-      dueDate: "",
-      dueTime: "",
-      client: "",
-      vendedor: ""
-    });
+    
+    if (!formData.title || !formData.type || !formData.priority || !formData.due_date || !formData.vendedor) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await createTask({
+        title: formData.title,
+        description: formData.description,
+        type: formData.type as any,
+        priority: formData.priority as any,
+        status: 'pending',
+        due_date: formData.due_date,
+        due_time: formData.due_time,
+        client_name: formData.client_name,
+        vendedor: formData.vendedor
+      });
+      
+      onClose();
+      setFormData({
+        title: "",
+        description: "",
+        type: "",
+        priority: "",
+        due_date: "",
+        due_time: "",
+        client_name: "",
+        vendedor: ""
+      });
+    } catch (error) {
+      console.error('Erro ao criar tarefa:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -119,23 +147,23 @@ export function AddTaskModal({ open, onClose }: AddTaskModalProps) {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="dueDate">Data de Vencimento *</Label>
+                  <Label htmlFor="due_date">Data de Vencimento *</Label>
                   <Input
-                    id="dueDate"
+                    id="due_date"
                     type="date"
-                    value={formData.dueDate}
-                    onChange={(e) => handleChange("dueDate", e.target.value)}
+                    value={formData.due_date}
+                    onChange={(e) => handleChange("due_date", e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="dueTime">Horário</Label>
+                  <Label htmlFor="due_time">Horário</Label>
                   <Input
-                    id="dueTime"
+                    id="due_time"
                     type="time"
-                    value={formData.dueTime}
-                    onChange={(e) => handleChange("dueTime", e.target.value)}
+                    value={formData.due_time}
+                    onChange={(e) => handleChange("due_time", e.target.value)}
                   />
                 </div>
               </div>
@@ -149,13 +177,19 @@ export function AddTaskModal({ open, onClose }: AddTaskModalProps) {
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="client">Cliente</Label>
-                  <Input
-                    id="client"
-                    value={formData.client}
-                    onChange={(e) => handleChange("client", e.target.value)}
-                    placeholder="Nome do cliente"
-                  />
+                  <Label htmlFor="client_name">Cliente</Label>
+                  <Select value={formData.client_name} onValueChange={(value) => handleChange("client_name", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecionar cliente" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {clients.map((client) => (
+                        <SelectItem key={client.id} value={client.name}>
+                          {client.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">
@@ -165,10 +199,10 @@ export function AddTaskModal({ open, onClose }: AddTaskModalProps) {
                       <SelectValue placeholder="Selecionar vendedor" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="joao">João Silva</SelectItem>
-                      <SelectItem value="maria">Maria Santos</SelectItem>
-                      <SelectItem value="carlos">Carlos Lima</SelectItem>
-                      <SelectItem value="ana">Ana Costa</SelectItem>
+                      <SelectItem value="João Silva">João Silva</SelectItem>
+                      <SelectItem value="Maria Santos">Maria Santos</SelectItem>
+                      <SelectItem value="Carlos Lima">Carlos Lima</SelectItem>
+                      <SelectItem value="Ana Costa">Ana Costa</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -177,11 +211,11 @@ export function AddTaskModal({ open, onClose }: AddTaskModalProps) {
           </Card>
 
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
               Cancelar
             </Button>
-            <Button type="submit">
-              Criar Tarefa
+            <Button type="submit" disabled={loading}>
+              {loading ? "Criando..." : "Criar Tarefa"}
             </Button>
           </div>
         </form>

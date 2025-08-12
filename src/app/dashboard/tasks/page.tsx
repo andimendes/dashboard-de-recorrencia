@@ -1,104 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, CheckCircle, Clock, Plus, Phone, Mail, MapPin, AlertTriangle } from "lucide-react";
+import { Calendar, CheckCircle, Clock, Plus, AlertTriangle } from "lucide-react";
 import { TaskCalendar } from "@/components/tasks/task-calendar";
 import { TaskList } from "@/components/tasks/task-list";
 import { AddTaskModal } from "@/components/tasks/add-task-modal";
-
-const tasks = [
-  {
-    id: "1",
-    title: "Ligar para Restaurante Popular",
-    description: "Cliente atrasado 3 dias no ciclo de compra",
-    type: "call" as const,
-    priority: "high" as const,
-    status: "pending" as const,
-    dueDate: "2024-01-15",
-    dueTime: "09:00",
-    client: "Restaurante Popular",
-    vendedor: "João Silva",
-    createdAt: "2024-01-14"
-  },
-  {
-    id: "2",
-    title: "Enviar proposta para Lanchonete Express",
-    description: "Enviar proposta comercial com desconto especial",
-    type: "email" as const,
-    priority: "medium" as const,
-    status: "pending" as const,
-    dueDate: "2024-01-15",
-    dueTime: "14:00",
-    client: "Lanchonete Express",
-    vendedor: "Maria Santos",
-    createdAt: "2024-01-13"
-  },
-  {
-    id: "3",
-    title: "Visita técnica - Pizzaria Família",
-    description: "Apresentar novos produtos e negociar contrato",
-    type: "visit" as const,
-    priority: "high" as const,
-    status: "completed" as const,
-    dueDate: "2024-01-14",
-    dueTime: "15:30",
-    client: "Pizzaria Família",
-    vendedor: "Carlos Lima",
-    createdAt: "2024-01-12"
-  },
-  {
-    id: "4",
-    title: "Follow-up Mercado Bom Preço",
-    description: "Verificar status da proposta enviada",
-    type: "call" as const,
-    priority: "medium" as const,
-    status: "pending" as const,
-    dueDate: "2024-01-16",
-    dueTime: "10:30",
-    client: "Mercado Bom Preço",
-    vendedor: "Ana Costa",
-    createdAt: "2024-01-14"
-  },
-  {
-    id: "5",
-    title: "Reunião de fechamento - Supermercado Novo",
-    description: "Reunião final para assinatura do contrato",
-    type: "meeting" as const,
-    priority: "urgent" as const,
-    status: "pending" as const,
-    dueDate: "2024-01-16",
-    dueTime: "16:00",
-    client: "Supermercado Novo",
-    vendedor: "João Silva",
-    createdAt: "2024-01-15"
-  }
-];
+import { useTasks } from "@/hooks/use-tasks";
 
 export default function TasksPage() {
+  const { tasks, loading } = useTasks();
   const [selectedView, setSelectedView] = useState("list");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterPriority, setFilterPriority] = useState("all");
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const filteredTasks = tasks.filter(task => {
-    const matchesStatus = filterStatus === "all" || task.status === filterStatus;
-    const matchesPriority = filterPriority === "all" || task.priority === filterPriority;
-    return matchesStatus && matchesPriority;
-  });
+  const filteredTasks = useMemo(() => {
+    return tasks.filter(task => {
+      const matchesStatus = filterStatus === "all" || task.status === filterStatus;
+      const matchesPriority = filterPriority === "all" || task.priority === filterPriority;
+      return matchesStatus && matchesPriority;
+    });
+  }, [tasks, filterStatus, filterPriority]);
 
-  const pendingTasks = tasks.filter(t => t.status === "pending").length;
-  const overdueTasks = tasks.filter(t => 
-    t.status === "pending" && new Date(t.dueDate) < new Date()
-  ).length;
-  const todayTasks = tasks.filter(t => 
-    t.dueDate === new Date().toISOString().split('T')[0]
-  ).length;
-  const completedTasks = tasks.filter(t => t.status === "completed").length;
+  const pendingTasks = useMemo(() => 
+    tasks.filter(t => t.status === "pending").length, [tasks]
+  );
+  
+  const overdueTasks = useMemo(() => 
+    tasks.filter(t => 
+      t.status === "pending" && new Date(t.due_date) < new Date()
+    ).length, [tasks]
+  );
+  
+  const todayTasks = useMemo(() => 
+    tasks.filter(t => 
+      t.due_date === new Date().toISOString().split('T')[0]
+    ).length, [tasks]
+  );
+  
+  const completedTasks = useMemo(() => 
+    tasks.filter(t => t.status === "completed").length, [tasks]
+  );
+
+  if (loading) {
+    return (
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-center justify-center py-8">
+          <p className="text-muted-foreground">Carregando tarefas...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
