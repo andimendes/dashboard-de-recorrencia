@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Phone, Mail, MapPin, Users, Calendar, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Phone, Mail, MapPin, Clock, CheckCircle, AlertTriangle, Calendar } from "lucide-react";
 
 interface Task {
   id: string;
@@ -27,19 +24,17 @@ interface TaskListProps {
 }
 
 export function TaskList({ tasks }: TaskListProps) {
-  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
-
   const getTaskIcon = (type: string) => {
     switch (type) {
       case "call": return <Phone className="h-4 w-4" />;
       case "email": return <Mail className="h-4 w-4" />;
       case "visit": return <MapPin className="h-4 w-4" />;
-      case "meeting": return <Users className="h-4 w-4" />;
-      default: return <Calendar className="h-4 w-4" />;
+      case "meeting": return <Calendar className="h-4 w-4" />;
+      default: return <Clock className="h-4 w-4" />;
     }
   };
 
-  const getTypeLabel = (type: string) => {
+  const getTaskTypeLabel = (type: string) => {
     switch (type) {
       case "call": return "Ligação";
       case "email": return "E-mail";
@@ -65,128 +60,108 @@ export function TaskList({ tasks }: TaskListProps) {
       case "high": return "Alta";
       case "medium": return "Média";
       case "low": return "Baixa";
-      default: return "Normal";
+      default: return priority;
     }
   };
 
-  const isOverdue = (dueDate: string) => {
-    return new Date(dueDate) < new Date() && !completedTasks.includes(dueDate);
-  };
-
-  const handleTaskComplete = (taskId: string, completed: boolean) => {
-    if (completed) {
-      setCompletedTasks([...completedTasks, taskId]);
-    } else {
-      setCompletedTasks(completedTasks.filter(id => id !== taskId));
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "completed": return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "pending": return <Clock className="h-4 w-4 text-yellow-500" />;
+      case "cancelled": return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      default: return <Clock className="h-4 w-4 text-gray-500" />;
     }
   };
 
-  const sortedTasks = [...tasks].sort((a, b) => {
-    // Prioridade: urgente > alta > média > baixa
-    const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
-    const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
-    const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
-    
-    if (aPriority !== bPriority) {
-      return bPriority - aPriority;
-    }
-    
-    // Se mesma prioridade, ordenar por data
-    return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-  });
+  const isOverdue = (dueDate: string, status: string) => {
+    return status === "pending" && new Date(dueDate) < new Date();
+  };
+
+  const handleCompleteTask = (taskId: string) => {
+    console.log("Completar tarefa:", taskId);
+    // Aqui seria implementada a lógica de completar tarefa
+  };
+
+  const handleEditTask = (taskId: string) => {
+    console.log("Editar tarefa:", taskId);
+    // Aqui seria implementada a lógica de editar tarefa
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Lista de Tarefas</CardTitle>
-        <CardDescription>
-          {tasks.length} tarefas encontradas
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">Status</TableHead>
-              <TableHead>Tarefa</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead>Cliente</TableHead>
-              <TableHead>Prioridade</TableHead>
-              <TableHead>Data/Hora</TableHead>
-              <TableHead>Vendedor</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedTasks.map((task) => {
-              const isCompleted = completedTasks.includes(task.id) || task.status === "completed";
-              const overdue = isOverdue(task.dueDate);
+    <div className="space-y-4">
+      {tasks.length === 0 ? (
+        <Card>
+          <CardContent className="flex items-center justify-center py-8">
+            <p className="text-muted-foreground">Nenhuma tarefa encontrada</p>
+          </CardContent>
+        </Card>
+      ) : (
+        tasks.map((task) => (
+          <Card key={task.id} className={`${isOverdue(task.dueDate, task.status) ? 'border-red-200 bg-red-50' : ''}`}>
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  {getTaskIcon(task.type)}
+                  <div>
+                    <CardTitle className="text-lg">{task.title}</CardTitle>
+                    <CardDescription className="flex items-center gap-2 mt-1">
+                      <span>{getTaskTypeLabel(task.type)}</span>
+                      <span>•</span>
+                      <span>{task.client}</span>
+                    </CardDescription>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {getStatusIcon(task.status)}
+                  <Badge variant={getPriorityBadgeVariant(task.priority)}>
+                    {getPriorityLabel(task.priority)}
+                  </Badge>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">{task.description}</p>
               
-              return (
-                <TableRow key={task.id} className={isCompleted ? "opacity-60" : ""}>
-                  <TableCell>
-                    <Checkbox
-                      checked={isCompleted}
-                      onCheckedChange={(checked) => handleTaskComplete(task.id, checked as boolean)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        {getTaskIcon(task.type)}
-                        <span className={`font-medium ${isCompleted ? "line-through" : ""}`}>
-                          {task.title}
-                        </span>
-                        {overdue && (
-                          <AlertTriangle className="h-4 w-4 text-red-500" />
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{task.description}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">
-                      {getTypeLabel(task.type)}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    <span>{new Date(task.dueDate).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{task.dueTime}</span>
+                  </div>
+                  <span>Vendedor: {task.vendedor}</span>
+                  {isOverdue(task.dueDate, task.status) && (
+                    <Badge variant="destructive" className="text-xs">
+                      Atrasada
                     </Badge>
-                  </TableCell>
-                  <TableCell>{task.client}</TableCell>
-                  <TableCell>
-                    <Badge variant={getPriorityBadgeVariant(task.priority)}>
-                      {getPriorityLabel(task.priority)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(task.dueDate).toLocaleDateString('pt-BR')}
-                      </div>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        {task.dueTime}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{task.vendedor}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="sm">
-                        <Phone className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Mail className="h-4 w-4" />
-                      </Button>
-                      {isCompleted && (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  {task.status === "pending" && (
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleCompleteTask(task.id)}
+                    >
+                      Concluir
+                    </Button>
+                  )}
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => handleEditTask(task.id)}
+                  >
+                    Editar
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))
+      )}
+    </div>
   );
 }

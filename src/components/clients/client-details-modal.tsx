@@ -5,32 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Phone, Mail, MapPin, Calendar, DollarSign, Package, Clock } from "lucide-react";
-
-interface Client {
-  id: string;
-  name: string;
-  cnpj: string;
-  score: "A" | "B" | "C";
-  faturamento: number;
-  ultimaCompra: string;
-  frequencia: string;
-  vendedor: string;
-  telefone: string;
-  email: string;
-  endereco: string;
-  pmp: number;
-  produtos: string[];
-}
+import { Phone, Mail, MapPin, DollarSign, Calendar, TrendingUp, Package } from "lucide-react";
 
 interface ClientDetailsModalProps {
-  client: Client;
+  client: any;
   open: boolean;
   onClose: () => void;
 }
 
 export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModalProps) {
-  const getScoreBadgeVariant = (score: "A" | "B" | "C") => {
+  const getScoreBadgeVariant = (score: string) => {
     switch (score) {
       case "A": return "default";
       case "B": return "secondary";
@@ -39,11 +23,10 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
     }
   };
 
-  // Dados simulados de histórico
-  const recentOrders = [
-    { date: "2024-01-15", value: 3500, products: "Massa de Pastel, Massa de Pizza" },
-    { date: "2024-01-08", value: 4200, products: "Massa de Lasanha, Massa de Pizza" },
-    { date: "2024-01-01", value: 2800, products: "Massa de Pastel" },
+  const purchaseHistory = [
+    { date: "2024-01-15", products: ["Massa de Pastel"], value: 2500, vendedor: "João Silva" },
+    { date: "2024-01-01", products: ["Massa de Lasanha"], value: 3200, vendedor: "João Silva" },
+    { date: "2023-12-15", products: ["Massa de Pizza", "Massa de Pastel"], value: 4100, vendedor: "João Silva" },
   ];
 
   return (
@@ -57,7 +40,7 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
             </Badge>
           </DialogTitle>
           <DialogDescription>
-            Informações completas do cliente
+            Informações detalhadas do cliente
           </DialogDescription>
         </DialogHeader>
 
@@ -65,15 +48,15 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Visão Geral</TabsTrigger>
             <TabsTrigger value="contact">Contato</TabsTrigger>
-            <TabsTrigger value="sales">Vendas</TabsTrigger>
-            <TabsTrigger value="products">Produtos</TabsTrigger>
+            <TabsTrigger value="purchases">Compras</TabsTrigger>
+            <TabsTrigger value="analytics">Análises</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Dados Comerciais</CardTitle>
+                  <CardTitle className="text-lg">Informações Comerciais</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-2">
@@ -82,34 +65,31 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm">Última compra: {new Date(client.ultimaCompra).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">Frequência: {client.frequencia}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">PMP: {client.pmp} dias</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">Vendedor: {client.vendedor}</span>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Última Atividade</CardTitle>
+                  <CardTitle className="text-lg">Produtos Consumidos</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div>
-                    <p className="text-sm font-medium">Última Compra</p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(client.ultimaCompra).toLocaleDateString('pt-BR')}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Status</p>
-                    <Badge variant="outline" className="text-green-600 border-green-200">
-                      Em dia
-                    </Badge>
+                <CardContent>
+                  <div className="space-y-2">
+                    {client.produtos.map((produto: string, index: number) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Package className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">{produto}</span>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -119,13 +99,17 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
           <TabsContent value="contact" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Informações de Contato</CardTitle>
+                <CardTitle className="text-lg">Dados de Contato</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <p className="text-sm font-medium mb-1">CNPJ</p>
                     <p className="text-sm text-muted-foreground">{client.cnpj}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium mb-1">Vendedor Responsável</p>
+                    <p className="text-sm text-muted-foreground">{client.vendedor}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium mb-1">Telefone</p>
@@ -143,7 +127,7 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
                       <Button size="sm" variant="outline">Enviar</Button>
                     </div>
                   </div>
-                  <div>
+                  <div className="md:col-span-2">
                     <p className="text-sm font-medium mb-1">Endereço</p>
                     <div className="flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -155,25 +139,32 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
             </Card>
           </TabsContent>
 
-          <TabsContent value="sales" className="space-y-4">
+          <TabsContent value="purchases" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Histórico de Vendas</CardTitle>
-                <CardDescription>Últimos pedidos realizados</CardDescription>
+                <CardTitle className="text-lg">Histórico de Compras</CardTitle>
+                <CardDescription>Últimas transações do cliente</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {recentOrders.map((order, index) => (
+                <div className="space-y-4">
+                  {purchaseHistory.map((purchase, index) => (
                     <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <p className="font-medium text-sm">
-                          {new Date(order.date).toLocaleDateString('pt-BR')}
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-medium">
+                            {new Date(purchase.date).toLocaleDateString('pt-BR')}
+                          </span>
+                          <Badge variant="outline">
+                            R$ {purchase.value.toLocaleString('pt-BR')}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-1">
+                          Produtos: {purchase.products.join(', ')}
                         </p>
-                        <p className="text-xs text-muted-foreground">{order.products}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Vendedor: {purchase.vendedor}
+                        </p>
                       </div>
-                      <Badge variant="outline">
-                        R$ {order.value.toLocaleString('pt-BR')}
-                      </Badge>
                     </div>
                   ))}
                 </div>
@@ -181,23 +172,36 @@ export function ClientDetailsModal({ client, open, onClose }: ClientDetailsModal
             </Card>
           </TabsContent>
 
-          <TabsContent value="products" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Mix de Produtos</CardTitle>
-                <CardDescription>Produtos comprados regularmente</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-2">
-                  {client.produtos.map((produto, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 border rounded">
-                      <Package className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm">{produto}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="analytics" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Ticket Médio</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">R$ 3.267</div>
+                  <p className="text-xs text-muted-foreground">+12% vs mês anterior</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Frequência de Compra</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{client.pmp} dias</div>
+                  <p className="text-xs text-muted-foreground">Prazo médio de pedido</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Produtos Favoritos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-sm font-bold">Massa de Pastel</div>
+                  <p className="text-xs text-muted-foreground">60% das compras</p>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
 

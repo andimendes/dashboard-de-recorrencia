@@ -7,8 +7,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 interface DatePickerWithRangeProps {
   date: DateRange | undefined;
@@ -37,11 +35,11 @@ export function DatePickerWithRange({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "dd/MM/yyyy", { locale: ptBR })} -{" "}
-                  {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
+                  {date.from.toLocaleDateString("pt-BR")} -{" "}
+                  {date.to.toLocaleDateString("pt-BR")}
                 </>
               ) : (
-                format(date.from, "dd/MM/yyyy", { locale: ptBR })
+                date.from.toLocaleDateString("pt-BR")
               )
             ) : (
               <span>Selecionar período</span>
